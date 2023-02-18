@@ -1,2 +1,8 @@
-.clj-kondo/
-.lsp/
+.cache
+.clj-kondo
+.cpcache
+.lsp
+.nrepl-port
+todos.sqlite
+target/
+*.jar
