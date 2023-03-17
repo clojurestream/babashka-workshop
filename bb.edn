@@ -1,10 +1,20 @@
 {:tasks {:requires ([babashka.fs :as fs])
+         :init (def jar-name "todos.jar")
          test (clojure "-X:test")
          start (clojure "-M" "-m" "todos.main")
          repl (clojure "-M:nrepl")
-         uberjar (clojure "-T:build" "uber")
-         image {:depends [uberjar]
-                :task (shell "./script/image.sh")}
+         uberjar {:doc "Build an uberjar"
+                  :task (if (seq (fs/modified-since jar-name ["src/"]))
+                          (clojure "-T:build" "uber")
+                          (println "jar up to date"))}
+         image {:doc "Build a container image"
+                :depends [uberjar]
+                :task (let [engine (->> ["podman" "docker"]
+                                        (map fs/which)
+                                        (some (fn [e] (when e e))))]
+                        (when-not engine
+                          (throw (ex-info "Podman or Docker not found." {:babashka/exit 1})))
+                        (shell (str engine " build -t docker.io/clojurestream/todo .")))}
          clean {:doc "Cleanup"
                 :task (do (fs/delete-if-exists jar-name)
                           (fs/delete-if-exists "todos.sqlite")
