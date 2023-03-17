@@ -1,0 +1,11 @@
+{:tasks {:requires ([babashka.fs :as fs])
+         test (clojure "-X:test")
+         start (clojure "-M" "-m" "todos.main")
+         repl (clojure "-M:nrepl")
+         uberjar (clojure "-T:build" "uber")
+         image {:depends [uberjar]
+                :task (shell "./script/image.sh")}
+         clean {:doc "Cleanup"
+                :task (do (fs/delete-if-exists jar-name)
+                          (fs/delete-if-exists "todos.sqlite")
+                          (fs/delete-tree "target"))}}}
