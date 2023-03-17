@@ -27,6 +27,12 @@ clojure --version
 - Start app locally: `make start`. Set the env vars `TODOS_HOST` and `TODOS_PORT` to customise.
 - Build container image: `make image`.
 
+### CLI
+
+- List all todos: `bb cli ls`
+- Add a todo: `bb cli todo`.
+- Mark it done: `bb cli done`
+
 ## Workshop Feedback
 
 At the end of the workshop, please [provide short feedback][feedback-form].

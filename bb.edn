@@ -19,4 +19,10 @@
          clean {:doc "Cleanup"
                 :task (do (fs/delete-if-exists jar-name)
                           (fs/delete-if-exists "todos.sqlite")
-                          (fs/delete-tree "target"))}}}
+                          (fs/delete-tree "target"))}
+         cli {:doc "Run the CLI"
+              :extra-paths ["cli"]
+              :requires ([todos.cli :as cli])
+              :extra-deps {io.github.lispyclouds/bblgum {:git/sha "f0561e6f8e430f2fbbd3f4093947dfdf6896e7e5"}
+                           doric/doric {:mvn/version "0.9.0"}}
+              :task (cli/-main *command-line-args*)}}}
