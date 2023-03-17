@@ -25,17 +25,15 @@
             :body "{\"message\":\"Hello!\"}"}
            (h/hello {}))))
   (testing "todo-handler"
-    (let [db-file "todos-test.sqlite"
-          db {:dbtype "sqlite" :dbname db-file}
+    (let [db "todos-test.sqlite"
           _ (main/migrate db)
           {:keys [status body]} (h/todo {:db db
                                          :body (io/input-stream "test/payload.json")})]
       (is (= 200 status))
       (is (contains? (:message (json/parse-string body true)) :id))
-      (io/delete-file db-file)))
+      (io/delete-file db)))
   (testing "done-handler"
-    (let [db-file "todos-test.sqlite"
-          db {:dbtype "sqlite" :dbname db-file}
+    (let [db "todos-test.sqlite"
           _ (main/migrate db)
           {:keys [body]} (h/todo {:db db
                                   :body (io/input-stream "test/payload.json")})
@@ -46,4 +44,4 @@
                                                           :id)}})]
       (is (= 200 status))
       (is (= "Ok" (:message (json/parse-string body true))))
-      (io/delete-file db-file))))
+      (io/delete-file db))))

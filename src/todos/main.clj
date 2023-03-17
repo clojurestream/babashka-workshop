@@ -1,12 +1,12 @@
 (ns todos.main
   (:require
-   [next.jdbc :as jdbc]
    [org.httpkit.server :as http]
+   [pod.babashka.go-sqlite3 :as sqlite]
    [ruuter.core :as ruuter]
    [todos.handlers :as handlers])
   (:gen-class))
 
-(def db {:dbtype "sqlite" :dbname "todos.sqlite"})
+(def db "todos.sqlite")
 
 (defn handler
   [request]
@@ -27,7 +27,7 @@
 
 (defn migrate
   [db]
-  (jdbc/execute! db ["CREATE TABLE IF NOT EXISTS todos (id TEXT PRIMARY KEY, title TEXT, due TEXT)"]))
+  (sqlite/execute! db ["CREATE TABLE IF NOT EXISTS todos (id TEXT PRIMARY KEY, title TEXT, due TEXT)"]))
 
 (defn -main
   [& _]

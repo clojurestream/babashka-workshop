@@ -2,8 +2,7 @@
   (:require
    [cheshire.core :as json]
    [clojure.java.io :as io]
-   [next.jdbc :as jdbc]
-   [next.jdbc.result-set :as rs]))
+   [pod.babashka.go-sqlite3 :as sqlite]))
 
 (defn respond
   ([msg]
@@ -19,18 +18,18 @@
 
 (defn ls
   [{db :db}]
-  (let [todos (jdbc/execute! db ["SELECT * FROM todos"] {:builder-fn rs/as-unqualified-lower-maps})]
+  (let [todos (sqlite/execute! db ["SELECT * FROM todos"])]
     (respond todos)))
 
 (defn todo
   [{:keys [db body]}]
   (let [{:keys [title due]} (json/parse-stream (io/reader body) true)
         id (random-uuid)]
-    (jdbc/execute-one! db ["INSERT INTO todos (id, title, due) VALUES (?, ?, ?)" id title due])
+    (sqlite/execute! db ["INSERT INTO todos (id, title, due) VALUES (?, ?, ?)" id title due])
     (respond {:id id})))
 
 (defn done
   [{db :db
     {:keys [id]} :params}]
-  (jdbc/execute-one! db ["DELETE FROM todos WHERE id = ?" id])
+  (sqlite/execute! db ["DELETE FROM todos WHERE id = ?" id])
   (respond "Ok"))
