@@ -23,6 +23,7 @@ jobs:
         uses: "DeLaGuardo/setup-clojure@master"
         with:
           cli: "latest"
+          bb: "latest"
 
       - name: "Apply Cache"
         uses: "actions/cache@v3"
@@ -34,4 +35,4 @@ jobs:
           restore-keys: "$todos-"
 
       - name: "Run tests"
-        run: "make test"
+        run: "bb test"
