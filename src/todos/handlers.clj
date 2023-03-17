@@ -18,7 +18,7 @@
 
 (defn ls
   [{db :db}]
-  (let [todos (sqlite/execute! db ["SELECT * FROM todos"])]
+  (let [todos (sqlite/query db ["SELECT * FROM todos"])]
     (respond todos)))
 
 (defn todo
