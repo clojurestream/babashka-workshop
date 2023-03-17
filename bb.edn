@@ -12,6 +12,7 @@
                 :task (let [engine (->> ["podman" "docker"]
                                         (map fs/which)
                                         (some (fn [e] (when e e))))]
+                        (println "using engine:" (str engine))
                         (when-not engine
                           (throw (ex-info "Podman or Docker not found." {:babashka/exit 1})))
                         (shell (str engine " build -t docker.io/clojurestream/todo .")))}
